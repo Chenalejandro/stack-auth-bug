@@ -1,18 +1,16 @@
-"use client";
-import { useUser } from "@stackframe/stack";
-import { useState } from "react";
-import { SubmitButton } from "./submit-button";
+import { stackServerApp } from "@/stack";
+import { ClientComponent } from "./client-component";
 
-export default function Home() {
-  const user = useUser();
-  const [userName, setUserName] = useState<string>("");
+export default async function Home() {
+  const user = await stackServerApp.getUser();
+  if (!user) {
+    <main>Please log in</main>;
+  }
   return (
     <main>
-      <input
-        defaultValue={user?.displayName ?? ""}
-        onChange={(event) => setUserName(event.target.value)}
-      ></input>
-      <SubmitButton userName={userName}>Change user name</SubmitButton>
+      <ClientComponent
+        user={{ displayName: user?.displayName ?? "" }}
+      ></ClientComponent>
     </main>
   );
 }
